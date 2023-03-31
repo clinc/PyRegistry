@@ -330,7 +330,10 @@ class ManifestV2(Manifest):
         """
         Returns a tuple of media types for the manifest type.
         """
-        return ("application/vnd.docker.distribution.manifest.v2+json",)
+        return (
+            "application/vnd.docker.distribution.manifest.v2+json",
+            "application/vnd.oci.image.manifest.v1+json",
+        )
 
     def sub_objects(
         self, registry: "Registry", repo: List[str]
@@ -356,7 +359,10 @@ class ManifestListV2(Manifest):
         """
         Returns a tuple of media types for the manifest type.
         """
-        return ("application/vnd.docker.distribution.manifest.list.v2+json",)
+        return (
+            "application/vnd.docker.distribution.manifest.list.v2+json",
+            "application/vnd.oci.image.index.v1+json",
+            )
 
     def sub_objects(
         self, registry: "Registry", repo: List[str]
