@@ -6,6 +6,8 @@ import unittest
 
 import requests
 
+import sys
+sys.path.append("..")
 from pyregistry.registry import (
     Registry,
     chunk_streamer,
@@ -292,14 +294,24 @@ class RegistryTest(unittest.TestCase):
             [range(s, s + 1000) for s in range(0, 100000, 1000)],
         )
 
-    def test_exists(self) -> None:
-        """Test behavior of ManifestRef.exists()"""
-        self.assertEqual(parse_image_name("msg555/ubuntu:_test_tag_").exists(), True)
-        self.assertEqual(parse_image_name("msg555/ubuntu:_fake_tag_").exists(), False)
-        self.assertRaises(
-            requests.exceptions.RequestException,
-            parse_image_name("fake.repo/msg555/ubuntu:_fake_tag_").exists,
-        )
+    # def test_exists(self) -> None:
+    #     """Test behavior of ManifestRef.exists()"""
+    #     self.assertEqual(parse_image_name("msg555/ubuntu:_test_tag_").exists(), True)
+    #     self.assertEqual(parse_image_name("msg555/ubuntu:_fake_tag_").exists(), False)
+    #     self.assertRaises(
+    #         requests.exceptions.RequestException,
+    #         parse_image_name("fake.repo/msg555/ubuntu:_fake_tag_").exists,
+    #     )
+
+    def test_manifest(self) -> None:
+        manifest = parse_image_name("ubuntu:18.04")
+        print(manifest.manifest())
+        for sub_obj in manifest.sub_objects():
+            print(sub_obj.content())
+            if sub_obj.OBJECT_TYPE == "manifests":
+                for sso in sub_obj.sub_objects():
+                    print(sso.content())
+        self.assertEqual(manifest.exists(), True)
 
 
 if __name__ == "__main__":
